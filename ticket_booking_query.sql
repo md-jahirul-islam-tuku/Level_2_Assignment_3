@@ -7,16 +7,11 @@ DROP TABLE IF EXISTS Matches;
 
 DROP TABLE IF EXISTS Users;
 
--- ===============
--- create database
--- ===============
-CREATE DATABASE football_ticket_booking_system;
-
 -- ==================
 -- create users table
 -- ==================
 CREATE TABLE
-    users (
+    Users (
         user_id serial PRIMARY KEY,
         full_name varchar(100) NOT NULL,
         email varchar(100) UNIQUE NOT NULL,
@@ -28,11 +23,11 @@ CREATE TABLE
 -- create matches table
 -- ====================
 CREATE TABLE
-    matches (
+    Matches (
         match_id serial PRIMARY KEY,
         fixture varchar(150) NOT NULL,
         tournament_category varchar(50) NOT NULL,
-        base_ticket_price decimal(8, 2) NOT NULL CHECK (base_ticket_price > 0),
+        base_ticket_price decimal(10, 2) NOT NULL CHECK (base_ticket_price >= 0),
         match_status varchar(20) NOT NULL CHECK (
             match_status IN (
                 'Available',
@@ -47,42 +42,47 @@ CREATE TABLE
 -- create bookings table
 -- =====================
 CREATE TABLE
-    bookings (
+    Bookings (
         booking_id serial PRIMARY KEY,
-        user_id int NOT NULL REFERENCES users (user_id),
-        match_id int NOT NULL REFERENCES matches (match_id),
+        user_id int NOT NULL REFERENCES Users (user_id),
+        match_id int NOT NULL REFERENCES Matches (match_id),
         seat_number varchar(20),
         payment_status varchar(20) CHECK (
             payment_status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')
         ),
-        total_cost decimal(8, 2) NOT NULL CHECK (total_cost > 0)
+        total_cost decimal(10, 2) NOT NULL CHECK (total_cost >= 0),
+        UNIQUE (match_id, seat_number)
     );
 
 -- ===================================
 -- insert sample data into users table
 -- ===================================
 INSERT INTO
-    users (full_name, email, role, phone_number)
+    Users (user_id, full_name, email, role, phone_number)
 VALUES
     (
+        1,
         'Tanvir Rahman',
         'tanvir@mail.com',
         'Football Fan',
         '+8801711111111'
     ),
     (
+        2,
         'Asif Haque',
         'asif@mail.com',
         'Football Fan',
         '+8801722222222'
     ),
     (
+        3,
         'Sajjad Rahman',
         'sajjad@mail.com',
         'Ticket Manager',
         '+8801733333333'
     ),
     (
+        4,
         'Jannat Ara',
         'jannat@mail.com',
         'Football Fan',
@@ -93,7 +93,7 @@ VALUES
 -- insert sample data into matches table
 -- =====================================
 INSERT INTO
-    matches (
+    Matches (
         match_id,
         fixture,
         tournament_category,
@@ -105,35 +105,35 @@ VALUES
         101,
         'Real Madrid vs Barcelona',
         'Champions League',
-        150,
+        150.00,
         'Available'
     ),
     (
         102,
         'Man City vs Liverpool',
         'Premier League',
-        120,
+        120.00,
         'Selling Fast'
     ),
     (
         103,
         'Bayern Munich vs PSG',
         'Champions League',
-        130,
+        130.00,
         'Available'
     ),
     (
         104,
         'AC Milan vs Inter Milan',
         'Serie A',
-        90,
+        90.00,
         'Sold Out'
     ),
     (
         105,
         'Juventus vs Roma',
         'Serie A',
-        80,
+        80.00,
         'Available'
     );
 
@@ -141,7 +141,7 @@ VALUES
 -- insert sample data into bookings table
 -- ======================================
 INSERT INTO
-    bookings (
+    Bookings (
         booking_id,
         user_id,
         match_id,
@@ -150,11 +150,11 @@ INSERT INTO
         total_cost
     )
 VALUES
-    (501, 1, 101, 'A-12', 'Confirmed', 150),
-    (502, 1, 102, 'B-04', 'Confirmed', 120),
-    (503, 2, 101, 'A-13', 'Confirmed', 150),
-    (504, 2, 101, NULL, NULL, 150),
-    (505, 3, 102, 'C-20', 'Pending', 120);
+    (501, 1, 101, 'A-12', 'Confirmed', 150.00),
+    (502, 1, 102, 'B-04', 'Confirmed', 120.00),
+    (503, 2, 101, 'A-13', 'Confirmed', 150.00),
+    (504, 2, 101, NULL, NULL, 150.00),
+    (505, 3, 102, 'C-20', 'Pending', 120.00);
 
 -- =========
 -- Query 1:
@@ -164,7 +164,7 @@ SELECT
     fixture,
     base_ticket_price
 FROM
-    matches
+    Matches
 WHERE
     tournament_category = 'Champions League'
     AND match_status = 'Available';
@@ -177,7 +177,7 @@ SELECT
     full_name,
     email
 FROM
-    users
+    Users
 WHERE
     full_name ILIKE 'Tanvir%'
     OR full_name ILIKE '%Haque%';
@@ -191,7 +191,7 @@ SELECT
     match_id,
     coalesce(payment_status, 'Action Required') AS systematic_status
 FROM
-    bookings
+    Bookings
 WHERE
     payment_status IS NULL;
 
@@ -199,25 +199,25 @@ WHERE
 -- Query 4:
 -- =========
 SELECT
-    booking_id,
-    full_name,
-    fixture,
-    total_cost
+    b.booking_id,
+    u.full_name,
+    m.fixture,
+    b.total_cost
 FROM
-    bookings b
-    INNER JOIN users u ON b.user_id = u.user_id
-    INNER JOIN matches m ON b.match_id = m.match_id;
+    Bookings b
+    INNER JOIN Users u ON b.user_id = u.user_id
+    INNER JOIN Matches m ON b.match_id = m.match_id;
 
 -- =========
 -- Query 5:
 -- =========
 SELECT
     u.user_id,
-    full_name,
-    booking_id
+    u.full_name,
+    b.booking_id
 FROM
-    users u
-    LEFT JOIN bookings b ON u.user_id = b.user_id;
+    Users u
+    LEFT JOIN Bookings b ON u.user_id = b.user_id;
 
 -- =========
 -- Query 6:
@@ -227,13 +227,13 @@ SELECT
     match_id,
     total_cost
 FROM
-    bookings
+    Bookings
 WHERE
     total_cost > (
         SELECT
             avg(total_cost)
         FROM
-            bookings
+            Bookings
     );
 
 -- =========
@@ -244,7 +244,7 @@ SELECT
     fixture,
     base_ticket_price
 FROM
-    matches
+    Matches
 ORDER BY
     base_ticket_price DESC
 LIMIT
