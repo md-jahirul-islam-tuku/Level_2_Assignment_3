@@ -1,11 +1,20 @@
+-- =====================================================
+-- drop table if they already exist to prevent conflicts
+-- =====================================================
 DROP TABLE IF EXISTS Bookings;
 
 DROP TABLE IF EXISTS Matches;
 
 DROP TABLE IF EXISTS Users;
 
+-- ===============
+-- create database
+-- ===============
 CREATE DATABASE football_ticket_booking_system;
 
+-- ==================
+-- create users table
+-- ==================
 CREATE TABLE
     users (
         user_id serial PRIMARY KEY,
@@ -15,6 +24,9 @@ CREATE TABLE
         phone_number varchar(20)
     );
 
+-- ====================
+-- create matches table
+-- ====================
 CREATE TABLE
     matches (
         match_id serial PRIMARY KEY,
@@ -31,6 +43,9 @@ CREATE TABLE
         )
     );
 
+-- =====================
+-- create bookings table
+-- =====================
 CREATE TABLE
     bookings (
         booking_id serial PRIMARY KEY,
@@ -43,6 +58,9 @@ CREATE TABLE
         total_cost decimal(8, 2) NOT NULL CHECK (total_cost > 0)
     );
 
+-- ===================================
+-- insert sample data into users table
+-- ===================================
 INSERT INTO
     users (full_name, email, role, phone_number)
 VALUES
@@ -71,6 +89,9 @@ VALUES
         NULL
     );
 
+-- =====================================
+-- insert sample data into matches table
+-- =====================================
 INSERT INTO
     matches (
         match_id,
@@ -116,6 +137,9 @@ VALUES
         'Available'
     );
 
+-- ======================================
+-- insert sample data into bookings table
+-- ======================================
 INSERT INTO
     bookings (
         booking_id,
@@ -132,6 +156,9 @@ VALUES
     (504, 2, 101, NULL, NULL, 150),
     (505, 3, 102, 'C-20', 'Pending', 120);
 
+-- =========
+-- Query 1:
+-- =========
 SELECT
     match_id,
     fixture,
@@ -142,6 +169,9 @@ WHERE
     tournament_category = 'Champions League'
     AND match_status = 'Available';
 
+-- =========
+-- Query 2:
+-- =========
 SELECT
     user_id,
     full_name,
@@ -152,6 +182,9 @@ WHERE
     full_name ILIKE 'Tanvir%'
     OR full_name ILIKE '%Haque%';
 
+-- =========
+-- Query 3:
+-- =========
 SELECT
     booking_id,
     user_id,
@@ -162,6 +195,9 @@ FROM
 WHERE
     payment_status IS NULL;
 
+-- =========
+-- Query 4:
+-- =========
 SELECT
     booking_id,
     full_name,
@@ -172,6 +208,9 @@ FROM
     INNER JOIN users u ON b.user_id = u.user_id
     INNER JOIN matches m ON b.match_id = m.match_id;
 
+-- =========
+-- Query 5:
+-- =========
 SELECT
     u.user_id,
     full_name,
@@ -180,6 +219,9 @@ FROM
     users u
     LEFT JOIN bookings b ON u.user_id = b.user_id;
 
+-- =========
+-- Query 6:
+-- =========
 SELECT
     booking_id,
     match_id,
@@ -194,6 +236,9 @@ WHERE
             bookings
     );
 
+-- =========
+-- Query 7:
+-- =========
 SELECT
     match_id,
     fixture,
