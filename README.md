@@ -178,6 +178,10 @@ The ERD diagram is submitted separately as required in the assignment instructio
 
 The Theory Questions (Viva Practice) interview video link will be submitted separately as required in the assignment instructions.
 
+Interview Video Link (Public):
+
+Answer of Q-1: https://drive.google.com/file/d/1b4dwFee7aTdM9s3iyguZcvkKDfVVywng/view
+
 ---
 
 ## ✔ Author
