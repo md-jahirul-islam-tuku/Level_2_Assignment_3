@@ -155,3 +155,13 @@ FROM
     bookings
 WHERE
     payment_status IS NULL;
+
+SELECT
+    booking_id,
+    full_name,
+    fixture,
+    total_cost
+FROM
+    bookings b
+    INNER JOIN users u ON b.user_id = u.user_id
+    INNER JOIN matches m ON b.match_id = m.match_id;
