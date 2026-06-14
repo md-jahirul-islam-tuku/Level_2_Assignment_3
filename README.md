@@ -168,19 +168,19 @@ football-ticket-booking-system/
 
 ---
 
-## ERD Submission
+## ERD Link (Public):
 
-The ERD diagram is submitted separately as required in the assignment instructions.
+The Entity Relationship Diagram (ERD) is submitted separately as required in the assignment.
+
+ERD Link: https://drawsql.app/teams/tuku/diagrams/football-ticket-booking-system
 
 ---
 
-## Interview Video Submission
+## Interview Video Link (Public):
 
-The Theory Questions (Viva Practice) interview video link will be submitted separately as required in the assignment instructions.
+The Theory Questions (Viva Practice) interview video link is submitted separately as required in the assignment instructions.
 
-Interview Video Link (Public):
-
-Answer of Q-1: https://drive.google.com/file/d/1b4dwFee7aTdM9s3iyguZcvkKDfVVywng/view
+Answer of Q-1 Link: https://drive.google.com/file/d/1b4dwFee7aTdM9s3iyguZcvkKDfVVywng/view
 
 ---
 
